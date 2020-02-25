@@ -52,5 +52,11 @@ aggregatePopRaster <- function(raster.files, category, projexion) {
   output.list
 }
 
-
+getCountryShp <- function(cntrys.vector, lvl, path) {
+  output.list <- list()
+  for (cntry in cntrys.vector) {
+    output.list[[cntry]] <- getData("GADM", country=cntry, level=lvl, path=path)
+  }
+  output.list
+}
 

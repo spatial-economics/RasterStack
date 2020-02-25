@@ -10,7 +10,7 @@ source("code/RasterStack_Functions.R")
 
 
 # INPUT DATASETS ----------------------------------------------------------
-
+countrys <- c("ETH", "KEN", "NGA", "TZA", "ZMB")
 elevation.paths <- list.files("data/SRTM_1km_ASC", full.names = TRUE, 
                               pattern = "*.asc$")
 population.paths <- list.files("data/WorldPop", full.names = TRUE, 
@@ -35,12 +35,7 @@ bioclimatic.rasters_ <- lapply(bioclimatic.paths, raster) # 1Km by 1Km
 population.rasters_ <- lapply(population.paths, raster) # 100m by 100m
 
 # Download country shapefiles
-eth0 <- getData("GADM", country = "ETH", level = 0, path = "scratch/shp")
-ken0 <- getData("GADM", country = "KEN", level = 0, path = "scratch/shp")
-nga0 <- getData("GADM", country = "NGA", level = 0, path = "scratch/shp")
-tza0 <- getData("GADM", country = "TZA", level = 0, path = "scratch/shp")
-zmb0 <- getData("GADM", country = "ZMB", level = 0, path = "scratch/shp")
-countrys <- list(ETH = eth0, KEN = ken0, NGA = nga0, TZA = tza0, ZMB = zmb0)
+countrys.shp <- getCountryShp(countrys, lvl=0, path = "scratch/shp")
 
 # Propjections
 projexions <- 
@@ -52,9 +47,9 @@ projexions <-
 
 # CLIP ELEVATION AND BIOCLIMATIC DATA TO COUNTRY BOUDERS ------------------
 
-elevation.rasters <- maskCountry(countrys[1:2], elevation.rasters_, 
+elevation.rasters <- maskCountry(countrys.shp[1:2], elevation.rasters_, 
                                  "elevation", projexion)
-bioclimatic.rasters <- maskCountry(countrys[1:2], bioclimatic.rasters_[1:3], 
+bioclimatic.rasters <- maskCountry(countrys.shp[1:2], bioclimatic.rasters_[1:3], 
                                    "bioclimatic", projexion)
 
 
