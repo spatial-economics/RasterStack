@@ -30,8 +30,8 @@ dir.create("scratch/raster", showWarnings=FALSE, recursive = TRUE)
 dir.create(file.path(output.dir, "raster"), 
            showWarnings=FALSE, recursive = TRUE)
 # Load data
-elevation.rasters <- lapply(elevation.paths, raster)  # 1Km by 1Km
-bioclimatic.rasters <- lapply(bioclimatic.paths, raster) # 1Km by 1Km
+elevation.rasters_ <- lapply(elevation.paths, raster)  # 1Km by 1Km
+bioclimatic.rasters_ <- lapply(bioclimatic.paths, raster) # 1Km by 1Km
 population.rasters_ <- lapply(population.paths, raster) # 100m by 100m
 
 # Download country shapefiles
@@ -44,22 +44,23 @@ countrys <- list(ETH = eth0, KEN = ken0, NGA = nga0, TZA = tza0, ZMB = zmb0)
 
 # Propjections
 projexions <- 
-  list(WGS =   CRS("+proj=longlat +datum=WGS84 +no_defs
+  list(WGS =  CRS("+proj=longlat +datum=WGS84 +no_defs
                    +ellps=WGS84 +towgs84=0,0,0"),
        LAEA = CRS("+proj=laea +lat_0=5 +lon_0=20 +x_0=0 +y_0=0 
                   +a=6370997 +b=6370997 +units=m +no_defs"))
 
 
-# CLIP DATA TO COUNTRY BOUDERS --------------------------------------------
+# CLIP ELEVATION AND BIOCLIMATIC DATA TO COUNTRY BOUDERS ------------------
 
-elevation.rasters <- maskCountry(countrys, elevation.rasters, 
+elevation.rasters <- maskCountry(countrys[1:2], elevation.rasters_, 
                                  "elevation", projexion)
-bioclimatic.rasters <- maskCountry(countrys, bioclimatic.rasters, 
+bioclimatic.rasters <- maskCountry(countrys[1:2], bioclimatic.rasters_[1:3], 
                                    "bioclimatic", projexion)
 
 
+# AGGREGATE POPULATION DATA TO 1KM ----------------------------------------
 
-# AGGREGATE POPULATION DATA -----------------------------------------------
-
+population.rasters <- aggregatePopRaster(population.rasters_[1:2], 
+                                         "population", projexion)
 
 
